@@ -1,135 +1,77 @@
-# 磁気スキルミオン相転移研究 ＆ 学習記録 運用マニュアル
+## # 磁気スキルミオン相転移研究 ＆ 学習記録 運用マニュアル（2026年4月改訂版）
 
-## 0. 基本戦略（2つのリポジトリの使い分け）
-研究の効率化と、将来に向けた知識の蓄積を両立させるため、用途の異なる**2つのGitHubリポジトリ**を作成して運用します。
-
-1. **`Skyrmion_PhaseTransition_MC` (Private設定)**
-   * **目的:** 特定の研究成果（論文・計算結果）を出すための「戦場」。守秘義務があるため非公開。
-2. **`Physics_and_Code_Notes` (Public設定推奨)**
-   * **目的:** 物理の理論やプログラミングの知見を蓄積する「一生モノの財産」。将来のポートフォリオとしても活用。
-
----
-
-## 1. 開発・運用体制（デバイスの役割分担）
-「同期」させるのではなく、**「役割を固定してアクセスする」**運用を基本とします。
+## 1. 開発・運用体制（最新版）
+「同期」ではなく**「役割固定」**。特にWSでのVS Code SSH活用を主軸に置きます。
 
 | デバイス | 役割 | 運用方法 |
 | :--- | :--- | :--- |
-| **Linuxパソコン** | **メイン司令塔・解析機** | WSへSSH接続して計算を指令。NASのデータを読み込んでJulia/Cで解析・プロット。 |
-| **ワークステーション(WS)** | **計算専用エンジン** | C++の重いシミュレーションを実行。生データをNAS/ローカルに生成。 |
-| **NAS** | **巨大データ保管庫** | Git管理外の生データ（数GB〜数TB）をすべて保管。WSとLinux PCから共通パスで参照。 |
-| **Windowsノート** | **執筆・サブ司令塔** | GitHubからノートとグラフ画像だけを受け取り、LaTeXで論文・ゼミ資料を作成。 |
-| **GitHub** | **知識とコードのハブ** | ソースコード、解析スクリプト、研究・学習ノート（`.md`）、完成グラフ画像。 |
+| **WS (s248)** | **計算・開発の心臓** | **VS Code SSHで直接接続。** `Simulation/` で計算、`results/` (NAS) へ出力。 |
+| **Linux PC** | **解析・可視化** | `Analysis/` でJuliaを実行。NASの生データを読み込み、図を生成。 |
+| **NAS (Terastation)** | **巨大データ保管庫** | `/mnt/terastation_kido/` としてマウント。WSとLinux PCから共通参照。 |
+| **Windowsノート** | **執筆・管理** | GitHub経由で `note.md` や図（PDF/PNG）のみ同期。LaTeX執筆。 |
 
 ---
 
-## 2. ディレクトリ構成（統一された階層構造）
-
-### A. 研究用リポジトリ (`Skyrmion_PhaseTransition_MC`)
-「ディレクトリ構造がそのまま解析ロジックになる」ように配置します。
+## 2. ディレクトリ構成（確定版）
 
 ```text
-Skyrmion_PhaseTransition_MC/      # Gitリポジトリのルート
-├── .gitignore                    # ★最重要：生データを無視し、ノートと解析結果だけ同期
-├── README.md                     # 実行環境やライブラリの備忘録
+Skyrmion_PhaseTransition_MC/
+├── .git/
+├── .gitignore               # results/ 内の巨大データを除外
+├── README.md                # セットアップ備忘録
 │
-├── Simulation/                   # 🟩 1. 計算（純粋な数値計算）
-│   ├── src/                      # original.cpp, restart.cpp
-│   ├── run_multi_size.sh         # 連続実行スクリプト
-│   └── results/                  # 【Git管理外】生データ出力先
-│       └── 202604XX_multi_size/
-│           ├── run_all.log       # 計算ログ（★Git同期）
-│           └── note.md           # 💡 物理的な気づきを書くノート（★Git同期）
+├── Simulation/              # 🟩 計算（WSで実行）
+│   ├── src/                 # .cpp ソースコード（★ここへ移動済み）
+│   ├── results@             # -> /mnt/terastation_kido/sim_results (★NASへの道)
+│   ├── DM3dMC13_original.sh # 実行スクリプト（src/ 内を参照するよう修正）
+│   └── (各実行スクリプト)
 │
-├── Analysis/                     # 🟦 2. 解析（統計処理・描画）
-│   ├── Makefile                  # 📍 全解析・描画を一括制御する司令塔
-│   ├── processing/               # 【前処理】生データ -> 統計量.dat
-│   ├── plotting/                 # 【描画】統計量.dat -> 図
-│   └── output/                   # 📍 最終生成物（★.datと図のみGit同期）
+├── Analysis/                # 🟦 解析（Linux PCで実行）
+│   ├── processing/          # c_Delaunay_3D.c など（★ここへ移動済み）
+│   ├── analyze_stats.jl     # 統計処理メイン
+│   ├── visualize_spins.jl   # スピン配置図生成
+│   └── output/              # グラフ・統計量.dat（★これのみGit同期）
 │
-└── Thesis/                       # 🟧 3. 論文・資料執筆
-    ├── main.tex                  # 執筆の大元
-    └── figures/                  # Analysis/output/figures/ から同期
-```
-
-### B. 学習用リポジトリ (`Physics_and_Code_Notes`)
-後から検索しやすく、動作が重くならないように分類します。
-
-```text
-Physics_and_Code_Notes/
-├── 01_Physics/              # 物理の理論メモ
-│   ├── Statistical_Mechanics/
-│   ├── Active_Matter/
-│   └── Phase_Transition/
-├── 02_Programming/          # 言語ごとのTips
-│   ├── Julia/
-│   ├── Cpp/
-│   └── Python/
-├── 03_Tools/                # ツールの設定備忘録
-│   ├── Git_SSH_Setup.md     # 📍 今回覚えた環境構築手順など！
-│   └── LaTeX_Snippets.tex   # よく使う数式テンプレート
-└── 04_Seminar_Materials/    # ゼミで使った汎用的な資料（研究の生データ抜き）
+└── Thesis/                  # 🟧 論文・資料執筆
+    └── (main.tex, figures/)
 ```
 
 ---
 
-## 3. 第1段階：研究拠点の構築（セットアップ）
+## 3. 実践：VS Code SSH 運用術（ここが重要！）
 
-### ① GitHubアカウントとメールアドレスの設定
-* **アカウント作成:** 個人のメインメアド（Gmail等）で作成。
-* **大学メアドの追加:** `Settings -> Emails` から追加・認証（学生特典を受けるため）。
-* **リポジトリ設定:** 公式な記録を残したいリポジトリ内でのみ以下を実行。
-  ```bash
-  git config user.email "your-name@university.ac.jp"
-  ```
+WSとNASが繋がった今、**「WS上のVS Code」**で作業するのが最も効率的です。
 
-### ② Windowsノートでの「箱」作り（初回のみ）
-1. **GitHub上で作成:** `Skyrmion_PhaseTransition_MC` (Private) と `Physics_and_Code_Notes` (Public) の空リポジトリを作成。
-2. **ローカルへClone:** WindowsPC（OneDrive外）の適当な場所でターミナルを開き実行。
-   ```bash
-   git clone https://github.com/あなたのID/Skyrmion_PhaseTransition_MC.git
-   ```
-3. **フォルダとファイル作成:** `Simulation`, `Analysis`, `Thesis` フォルダを作る。リポジトリ直下に完全版の `.gitignore` を保存する。
-4. **最初のPush:**
-   ```bash
-   git add .
-   git commit -m "Initial setup with .gitignore"
-   git push origin main
-   ```
-
-### ③ Linux PC ＆ WS の準備
-1. 各マシンで `git clone` して手元に持ってくる。
-2. **パスワードなしログイン:** Linux PCからWSへSSH公開鍵を登録。
-3. **NASマウント:** Linux PCとWSの両方でNASをマウントし、共通の絶対パスにする。
-4. **tmux:** WSに仮想端末 `tmux` を導入（接続が切れても計算を継続させるため）。
+1.  **接続:** VS Codeの `Remote-SSH` で `kido@s248` に入る。
+2.  **開く:** `/home/kido-rikuma/Research/Skyrmion_PhaseTransition_MC` を開く。
+3.  **メリット:**
+    * `Simulation/src/` のコードを書き換え、そのまま下のターミナルでコンパイル・実行できる。
+    * `results/`（NAS）の中身をエクスプローラーでGUI操作（名前変更や削除）できる。
+    * **Git操作もVS Code左側のメニューからポチポチするだけで完結する。**
 
 ---
 
-## 4. テクニカル・ルール（自動化と統一）
+## 4. 日々の研究ルーティン（黄金フロー）
 
-> **「Analysisディレクトリに入って make したら必要な図が全て揃う」状況を維持する**
+### ① 計算を投げる（WS側）
+1.  VS Code SSHでWSに入る。
+2.  `Simulation/src/` のコードを修正。
+3.  `.sh` スクリプトを実行。
+    * `./DM3dMC13_original.sh`
+    * データは自動で `results/` (NAS) へ。
 
-* **基準パスの統一:** スクリプト内のパスは「Analysisフォルダを基準とした相対パス」で記述する。
-* **One-command 解析:** `make` を叩けば、未解析データの処理から図の生成まで全自動で行う状態を作る。
-* **命名規則の連動:** `plot_energy.gp` が `energy.pdf` を出力するように名前を揃える。
-* **図の同期:** `Analysis/output/figures/` から `Thesis/figures/` へのコピーは手動ではなくスクリプト化する。
+### ② 解析する（Linux PC側）
+1.  Linux PCで `git pull` して最新の解析スクリプト（Julia）を手元に持ってくる。
+2.  NASのパスを読み込んで解析実行。
+3.  できた図を `Analysis/output/` に保存。
+
+### ③ 記録して同期（共通）
+1.  `Simulation/results/` 内に `note.md` を作り、その時の物理的な考察をメモ。
+2.  `git add .` -> `git commit` -> `git push`
+3.  Windowsノートで `git pull` して、綺麗な図を見ながらLaTeXを書く。
 
 ---
 
-## 5. 第2段階：日々の研究ルーティン（運用フロー）
-
-### 1. 計算（Linux PC → WS）
-* Linux PCからWSにSSH接続し、`tmux` 内で計算プログラム（`original.cpp` 等）を実行。
-* 生データはGitで無視され、NAS（またはローカル）に安全に蓄積される。
-
-### 2. 考察と同期（WS / Linux PC）
-* 計算フォルダ内に `note.md` を作成し、パラメータ（$D$, $h$, $T$）や相転移の兆候などの気づきをメモ。
-* `git push` で `note.md` とログだけをGitHubへ送る。
-
-### 3. 解析と描画（Linux PC）
-* Linux PCで `Analysis/` に移動し、`make` を実行（JuliaとCが走る）。
-* 図のクオリティに納得したら `git push` し、GitHub経由で全デバイスに配布する。
-
-### 4. 執筆・学習（Windowsノート）
-* Windowsで `git pull` して最新の図と考察ノートを手元に揃え、`Thesis/` 内のLaTeXを執筆・コンパイルする。
-* 役立つ知見が得られたら、`Physics_and_Code_Notes` リポジトリ側にMarkdownで書き残し、`push` しておく。
+## 5. 💡 注意事項（トラブル防止）
+* **`.gitignore` の死守:** 絶対に `results/*.dat`（巨大データ）を `git add` しないこと。間違えて `push` するとGitHubの容量制限に引っかかります。
+* **絶対パス vs 相対パス:** スクリプト内でのパス指定は、極力 `~/Research/...` などの絶対パスか、リポジトリルートからの相対パスで統一しましょう。
