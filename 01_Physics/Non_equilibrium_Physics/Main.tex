@@ -1,0 +1,21 @@
+\documentclass[vcenter, 11pt, report]{jlreq}
+
+% --- パッケージ群 ---
+\usepackage{physics}
+\usepackage{amsmath, amssymb}
+\usepackage{subfiles} % ★これを追加
+
+% --- 表紙の情報 ---
+\title{非平衡統計力学 勉強ノート}
+\author{Kido}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\clearpage
+
+% --- 各論の読み込み（\input ではなく \subfile を使う） ---
+\subfile{01_Langevin}
+\subfile{02_Fokker_Planck}
+
+\end{document}

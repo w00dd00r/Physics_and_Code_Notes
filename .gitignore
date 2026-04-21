@@ -1,0 +1,11 @@
+# LaTeXの一時ファイルを除外
+*.aux
+*.log
+*.toc
+*.out
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+
+# PDFも基本的には除外（完成版をGitHubで見たいなら、この行は消してもOK）
+*.pdf
