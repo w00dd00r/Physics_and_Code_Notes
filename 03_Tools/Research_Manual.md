@@ -60,7 +60,12 @@ Physics_and_Code_Notes/
 ├── 01_Physics/              # 物理の理論メモ
 │   ├── Statistical_Mechanics/
 │   ├── Active_Matter/
-│   └── Phase_Transition/
+│   └── Non_equilibrium_Physics/  （リポジトリ内のフォルダ）
+|         ├── .gitignore            （一時ファイル除外用）
+|         ├── Main.tex              （全体の管理・設定・表紙）
+|         ├── 01_Langevin.tex       （各論：ランジュバン方程式）
+|         ├── 02_Fokker_Planck.tex  （各論：フォッカー・プランク方程式）
+|         └── figures/              （グラフや図の画像ファイルを入れる場所）
 ├── 02_Programming/          # 言語ごとのTips
 │   ├── Julia/
 │   ├── Cpp/
