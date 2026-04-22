@@ -1,0 +1,16 @@
+% !TEX root = Main.tex
+\documentclass[Main.tex]{subfiles}
+
+\begin{document}
+
+% --- 判定ロジック：Mainから呼ばれたら章、単体ならタイトルを表示 ---
+\ifSubfilesClassLoaded{%
+  {\centering \huge トピック名 \par} \vspace{2ex} 
+}{%
+  \chapter{トピック名} 
+}
+
+\section{はじめに}
+ここに内容を書き始めます。
+
+\end{document}

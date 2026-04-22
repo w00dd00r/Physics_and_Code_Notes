@@ -1,10 +1,15 @@
 % 01_Langevin.tex の中身
-\documentclass[Main.tex]{subfiles} % ★ここがポイント！
+\documentclass[Main.tex]{subfiles}
 
 \begin{document}
 
-\chapter{ランジュバン方程式}
-ここから本文を書き始める。
-Main.texで定義した \kB などのマクロや physics パッケージもそのまま使えます。
+\ifSubfilesClassLoaded{%
+  % 【各論を単体で実行した時】
+  {\centering \huge ランジュバン方程式 \par} \vspace{2ex} 
+}{%
+  % 【Main.tex から実行した時】
+  \chapter{ランジュバン方程式} 
+}
 
-\end{document} % ★最後もこれで閉じる
+
+\end{document}

@@ -1,6 +1,6 @@
 \documentclass[vcenter, 11pt, report]{jlreq}
 
-% --- パッケージ群 ---
+% --- 1. パッケージ群 ---
 \usepackage{physics}
 \usepackage{amsmath, amssymb}
 \usepackage{bm}
@@ -8,18 +8,21 @@
 \usepackage[dvipdfmx]{hyperref}
 \usepackage{subfiles}
 
+% --- 2. 独自マクロ（必要に応じて追加） ---
 \newcommand{\kB}{k_{\text{B}}}
 
-% --- 表紙の情報 ---
-\title{非平衡統計力学 勉強ノート}
-\author{Kido}
+% --- 3. 表紙の情報 ---
+\title{分野名：勉強ノート}
+\author{氏名}
+\date{\today}
 
 \begin{document}
+
 \maketitle
 \tableofcontents
 \clearpage
 
-% --- 各論の読み込み（\input ではなく \subfile を使う） ---
-\subfile{01_langevin}
+% --- 各論の読み込み ---
+\subfile{01_Topic}
 
 \end{document}
