@@ -32,7 +32,6 @@ Skyrmion_PhaseTransition_MC/
 │   ├── visualize_spins.jl   # スピン配置図生成
 │   └── output/              # グラフ・統計量.dat（★これのみGit同期）
 │
-<<<<<<< HEAD
 └── Thesis/                       # 🟧 3. 論文・資料執筆
     ├── main.tex                  # 執筆の大元
     └── figures/                  # Analysis/output/figures/ から同期
@@ -60,10 +59,8 @@ Physics_and_Code_Notes/
 │   ├── Git_SSH_Setup.md     # 📍 今回覚えた環境構築手順など！
 │   └── LaTeX_Snippets.tex   # よく使う数式テンプレート
 └── 04_Seminar_Materials/    # ゼミで使った汎用的な資料（研究の生データ抜き）
-=======
 └── Thesis/                  # 🟧 論文・資料執筆
     └── (main.tex, figures/)
->>>>>>> c293c2939b11f8179bd12b7f39e4d0baca4c09c1
 ```
 
 ---
