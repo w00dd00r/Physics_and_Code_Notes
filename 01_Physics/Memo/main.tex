@@ -1,0 +1,28 @@
+\documentclass[vcenter, 11pt, report]{jlreq}
+
+% --- 1. パッケージ群 ---
+\usepackage{physics}
+\usepackage{amsmath, amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage[dvipdfmx]{hyperref}
+\usepackage{subfiles}
+
+% --- 2. 独自マクロ（必要に応じて追加） ---
+\newcommand{\kB}{k_{\text{B}}}
+
+% --- 3. 表紙の情報 ---
+\title{分野名：勉強ノート}
+\author{氏名}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\clearpage
+
+% --- 各論の読み込み ---
+\subfile{biophysics.tex}
+
+\end{document}
