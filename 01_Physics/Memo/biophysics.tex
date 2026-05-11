@@ -1,15 +1,49 @@
-\documentclass[Main.tex]{subfiles}
+\documentclass[a4j,10pt,oneside,openany,standalone, dvipdfmx]{jsbook}
+\setcounter{tocdepth}{3}
+%
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{ascmac}
+\usepackage{makeidx}
+\usepackage{tikz} %図を描く
+\usepackage{graphicx} 
+\usepackage{enumitem}
+
+\usetikzlibrary{positioning, intersections, calc, arrows.meta,math} %tikzのlibrary
+%
+%\makeindex
+%
+\newcommand{\diff}{\mathrm{d}}  %微分記号
+\newcommand{\divergence}{\mathrm{div}\,}  %ダイバージェンス
+\newcommand{\grad}{\mathrm{grad}\,}  %グラディエント
+\newcommand{\rot}{\mathrm{rot}\,}  %ローテーション
+%
+\setlength{\textwidth}{\fullwidth}
+\setlength{\textheight}{44\baselineskip}
+\addtolength{\textheight}{\topskip}
+\setlength{\voffset}{-0.6in}
+\setlength{\headsep}{0.3in}
+%
+\title{{\Huge \textbf{MEMO}}\\ {\small Ver. 0}}
+\date{\today}%日付
+
+\newtheorem{theorem}{定理}
+\newtheorem{lemma}{補題}
 
 \begin{document}
+%
+%
+\maketitle
+\frontmatter
+\tableofcontents
+\clearpage
+%
+%
+\mainmatter
 
-% --- 判定ロジック：Mainから呼ばれたら章、単体ならタイトルを表示 ---
-\ifSubfilesClassLoaded{%
-  {\centering \huge トピック名 \par} \vspace{2ex} 
-}{%
-  \chapter{トピック名} 
-}
+\chapter{熱力学}%第1章
+\section{熱力学の基礎概念}
+\subsection{熱力学とは}
 
-\section{はじめに}
-ここに内容を書き始めます。
 
 \end{document}
